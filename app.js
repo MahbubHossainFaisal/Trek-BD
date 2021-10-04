@@ -1,16 +1,18 @@
 const express = require('express')
-
+const fs = require('fs')
 
 const app = express()
 
-//get method
-app.get('/', (req,res)=>{
-    res.status(200).json({name:'Mahbub Hossain Faisal',father:'Monwar Hossain',mother:'Fatema Begum'})
-})
+const tours = JSON.parse(fs.readFileSync(`${__dirname}/dev-data/data/tours-simple.json`))
 
-//post methid
-app.post('/',(req,res)=>{
-    res.send('You can post here!')
+app.get('/api/v1/tours', (req,res) =>{
+    res.status(200).json({
+        status: 'success',
+        result: tours.length,
+        data: {
+            tours
+        }
+    })
 })
 
 const port = 5000;
