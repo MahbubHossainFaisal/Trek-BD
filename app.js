@@ -100,12 +100,41 @@ const deleteTour = (req,res) =>{
         data: null
     })
 }
-// app.get('/api/v1/tours',getAllTours)
-// app.get('/api/v1/tours/:id',getTour)
-// app.post('/api/v1/tours',createTour )
-// app.patch('/api/v1/tours/:id', updateTour )
-// app.delete('/api/v1/tours/:id',deleteTour )
 
+//Route Handlers for users
+
+const getAllUsers = (req,res) =>{
+    res.status(500).json({
+        status: 'error',
+        message: 'Route is not defined yet!'
+    })
+}
+const createUser = (req,res) =>{
+    res.status(500).json({
+        status: 'error',
+        message: 'Route is not defined yet!'
+    })
+}
+const getUser = (req,res) =>{
+    res.status(500).json({
+        status: 'error',
+        message: 'Route is not defined yet!'
+    })
+}
+
+const updateUser = (req,res) =>{
+    res.status(500).json({
+        status: 'error',
+        message: 'Route is not defined yet!'
+    })
+}
+
+const deleteUser = (req,res) =>{
+    res.status(500).json({
+        status: 'error',
+        message: 'Route is not defined yet!'
+    })
+}
 
 //creating a middleware
 app.use((req,res,next) =>{
@@ -119,7 +148,7 @@ app.use((req,res,next) =>{
 })
 
 
-//Routes
+//Routes for tours
 app
 .route('/api/v1/tours')
 .get(getAllTours)
@@ -144,7 +173,18 @@ app
 .patch(updateTour)
 .delete(deleteTour)
 
+//Routes for users
 
+app
+.route('/api/v1/users')
+.get(getAllUsers)
+.post(createUser)
+
+app
+.route('/api/v1/users/:id')
+.get(getUser)
+.patch(updateUser)
+.delete(deleteUser)
 
 //server
 const port = 5000;
