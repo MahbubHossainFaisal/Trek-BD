@@ -9,7 +9,7 @@ const tours = JSON.parse(fs.readFileSync(`${__dirname}/dev-data/data/tours-simpl
 app.use(express.json())
 
 //get request to get all the tours
-app.get('/api/v1/tours', (req,res) =>{
+const getAllTours = (req,res) =>{
     res.status(200).json({
         status: 'success',
         result: tours.length,
@@ -17,10 +17,10 @@ app.get('/api/v1/tours', (req,res) =>{
             tours
         }
     })
-})
+}
 
 //get request to get a particular tour using id as param
-app.get('/api/v1/tours/:id', (req,res) =>{
+const getTour = (req,res) =>{
     //converting string to number with * 1
     const id = req.params.id * 1
     const tour = tours.find(tour => tour.id === id)
@@ -37,9 +37,10 @@ app.get('/api/v1/tours/:id', (req,res) =>{
             tour
         }
     })
-})
+}
+
 //post request to create a new tour
-app.post('/api/v1/tours', (req,res)=>{
+const createTour = (req,res)=>{
    const newID = tours[tours.length-1].id + 1;
    //making a new object
    const newTour = Object.assign({id: newID}, req.body)
@@ -55,10 +56,10 @@ app.post('/api/v1/tours', (req,res)=>{
            }
        })
    })
-})
+}
 
-//PATCH request 
-app.patch('/api/v1/tours/:id', (req,res) =>{
+//Patch request to update a tour
+const updateTour = (req,res) =>{
     if(req.params.id * 1 > tours.length){
        return res.status(404).json({
             status: 'fail',
@@ -73,10 +74,10 @@ app.patch('/api/v1/tours/:id', (req,res) =>{
             tour: 'Updated properties'
         }
     })
-})
+}
 
-//DELETE request
-app.delete('/api/v1/tours/:id', (req,res) =>{
+// delete a tour
+const deleteTour = (req,res) =>{
     if(req.params.id * 1 > tours.length){
        return res.status(404).json({
             status: 'fail',
@@ -89,7 +90,24 @@ app.delete('/api/v1/tours/:id', (req,res) =>{
         status: 'success',
         data: null
     })
-})
+}
+// app.get('/api/v1/tours',getAllTours)
+// app.get('/api/v1/tours/:id',getTour)
+// app.post('/api/v1/tours',createTour )
+// app.patch('/api/v1/tours/:id', updateTour )
+// app.delete('/api/v1/tours/:id',deleteTour )
+
+//this above lines can be written in two lines
+app
+.route('/api/v1/tours')
+.get(getAllTours)
+.post(createTour)
+
+app
+.route('/api/v1/tours/:id')
+.get(getTour)
+.patch(updateTour)
+.delete(deleteTour)
 
 
 const port = 5000;
