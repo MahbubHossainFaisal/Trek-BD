@@ -57,6 +57,41 @@ app.post('/api/v1/tours', (req,res)=>{
    })
 })
 
+//PATCH request 
+app.patch('/api/v1/tours/:id', (req,res) =>{
+    if(req.params.id * 1 > tours.length){
+       return res.status(404).json({
+            status: 'fail',
+            message: 'Invalid ID'
+        })
+    }
+
+    // actually this is just a demo of patch req , not updating anything
+    res.status(200).json({
+        status: 'success',
+        data: {
+            tour: 'Updated properties'
+        }
+    })
+})
+
+//DELETE request
+app.delete('/api/v1/tours/:id', (req,res) =>{
+    if(req.params.id * 1 > tours.length){
+       return res.status(404).json({
+            status: 'fail',
+            message: 'Invalid ID'
+        })
+    }
+
+    // actually this is just a demo of delete req , not deleting anything
+    res.status(204).json({
+        status: 'success',
+        data: null
+    })
+})
+
+
 const port = 5000;
 app.listen(port, ()=>{
     console.log(`App is running on port ${port}...`)
