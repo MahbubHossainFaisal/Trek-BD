@@ -1,15 +1,22 @@
 const express = require('express')
 const fs = require('fs')
-
+const morgan = require('morgan')
 const app = express()
 
 const tours = JSON.parse(fs.readFileSync(`${__dirname}/dev-data/data/tours-simple.json`))
 
+//middleware morgan
+
 //middleware to make a body property of req object while post request
+app.use(morgan('dev'))
 app.use(express.json())
 
+
+
+//Route Handlers
 //get request to get all the tours
 const getAllTours = (req,res) =>{
+    
     res.status(200).json({
         status: 'success',
         result: tours.length,
@@ -39,6 +46,7 @@ const getTour = (req,res) =>{
     })
 }
 
+
 //post request to create a new tour
 const createTour = (req,res)=>{
    const newID = tours[tours.length-1].id + 1;
@@ -60,6 +68,7 @@ const createTour = (req,res)=>{
 
 //Patch request to update a tour
 const updateTour = (req,res) =>{
+    
     if(req.params.id * 1 > tours.length){
        return res.status(404).json({
             status: 'fail',
@@ -97,11 +106,37 @@ const deleteTour = (req,res) =>{
 // app.patch('/api/v1/tours/:id', updateTour )
 // app.delete('/api/v1/tours/:id',deleteTour )
 
-//this above lines can be written in two lines
+
+//creating a middleware
+app.use((req,res,next) =>{
+    console.log('This is first middleware!')
+    next()
+})
+//creating a middleware
+app.use((req,res,next) =>{
+    console.log('This is second middleware!')
+    next()
+})
+
+
+//Routes
 app
 .route('/api/v1/tours')
 .get(getAllTours)
 .post(createTour)
+
+//creating a middleware
+app.use((req,res,next) =>{
+    console.log('This is third middleware!')
+    next()
+})
+//creating a middleware
+app.use((req,res,next) =>{
+    console.log('This is fourth middleware!')
+    next()
+})
+
+
 
 app
 .route('/api/v1/tours/:id')
@@ -110,6 +145,8 @@ app
 .delete(deleteTour)
 
 
+
+//server
 const port = 5000;
 app.listen(port, ()=>{
     console.log(`App is running on port ${port}...`)
