@@ -3,6 +3,19 @@ const fs = require('fs')
 const tours = JSON.parse(fs.readFileSync(`${__dirname}/../dev-data/data/tours-simple.json`))
 
 
+
+//param middleware function
+ exports.checkID = (req,res,next,val) =>{
+    console.log(`Tour id: ${val}`)
+    if(req.params.id * 1 > tours.length){
+       return res.status(404).json({
+            status: 'fail',
+            message: 'Invalid ID'
+        })
+    }
+    next()
+}
+
 //Route Handlers
 //get request to get all the tours
 exports.getAllTours = (req,res) =>{
@@ -59,13 +72,6 @@ exports.createTour = (req,res)=>{
 //Patch request to update a tour
 exports.updateTour = (req,res) =>{
     
-    if(req.params.id * 1 > tours.length){
-       return res.status(404).json({
-            status: 'fail',
-            message: 'Invalid ID'
-        })
-    }
-
     // actually this is just a demo of patch req , not updating anything
     res.status(200).json({
         status: 'success',
@@ -77,12 +83,7 @@ exports.updateTour = (req,res) =>{
 
 // delete a tour
 exports.deleteTour = (req,res) =>{
-    if(req.params.id * 1 > tours.length){
-       return res.status(404).json({
-            status: 'fail',
-            message: 'Invalid ID'
-        })
-    }
+    
 
     // actually this is just a demo of delete req , not deleting anything
     res.status(204).json({
