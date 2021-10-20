@@ -5,34 +5,45 @@ const Tour = require('../models/tourModel')
 
 //Route Handlers
 //get request to get all the tours
-exports.getAllTours = (req, res) => {
-  res.status(200).json({
-    // status: 'success',
-    // result: tours.length,
-    // data: {
-    //   tours,
-    // },
+exports.getAllTours = async (req, res) => {
+  
+ try{
+   const tours = await Tour.find()
+
+    res.status(200).json({
+    status: 'success',
+    result: tours.length,
+    data: {
+      tours,
+    },
   });
+ }catch(err){
+   res.status(404).json({
+     status: 'fail',
+     message: 'Invalid Request!'
+   })
+ }
 };
 
 //get request to get a particular tour using id as param
-exports.getTour = (req, res) => {
-  //    converting string to number with * 1
-  const id = req.params.id * 1;
-  // const tour = tours.find((tr) => tr.id === id);
+exports.getTour = async (req, res) => {
+ 
+  try{
+    const tour = await Tour.findById(req.params.id)
 
-  // if (!tour) {
-  //   return res.status(404).json({
-  //     status: 'fail',
-  //     message: 'Invalid ID',
-  //   });
-  // }
-  // res.status(200).json({
-  //   status: 'success',
-  //   data: {
-  //     tour,
-  //   },
-  // });
+    res.status(200).json({
+    status: 'success',
+    data: {
+      tour,
+    },
+    });
+  }catch(err){
+    res.status(404).json({
+        status: 'fail',
+        message: 'Invalid Request!'
+      })
+  }
+  
 };
 
 
