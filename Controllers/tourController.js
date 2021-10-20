@@ -35,26 +35,28 @@ exports.getTour = (req, res) => {
   // });
 };
 
-//check request body of tour before creating a new tour
-exports.checkTourBody = (req, res, next) => {
-  if (!req.body.name || !req.body.price) {
-    return res.status(404).json({
-      status: 'fail',
-      message: 'Missing name or price property!',
-    });
-  }
-  next();
-};
+
 
 //post request to create a new tour
-exports.createTour = (req, res) => {
+exports.createTour = async (req, res) => {
 
-  res.status(201).json({
+  try{
+    const newTour = await Tour.create(req.body)
+
+    res.status(201).json({
         status: 'success',
         data: {
           tour: newTour,
         },
       });
+  } catch(err){
+    res.status(400).json({
+      status: 'fail',
+      message: 'Invalid data sent!'
+    })
+  }
+
+  
 };
 
 //Patch request to update a tour

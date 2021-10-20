@@ -1,9 +1,7 @@
 const express = require('express');
 
 const {
-  checkID,
   getAllTours,
-  checkTourBody,
   createTour,
   getTour,
   updateTour,
@@ -13,6 +11,6 @@ const {
 const router = express.Router();
 //  param middleware
 //router.param('id', checkID);
-router.route('/').get(getAllTours).post(checkTourBody, createTour);
+router.route('/').get(getAllTours).post(createTour);
 router.route('/:id').get(getTour).patch(updateTour).delete(deleteTour);
 module.exports = router;
