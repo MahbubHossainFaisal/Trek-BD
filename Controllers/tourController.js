@@ -71,14 +71,27 @@ exports.createTour = async (req, res) => {
 };
 
 //Patch request to update a tour
-exports.updateTour = (req, res) => {
-  // actually this is just a demo of patch req , not updating anything
-  res.status(200).json({
+exports.updateTour = async (req, res) => {
+  try{
+    const tour = await Tour.findByIdAndUpdate(req.params.id, req.body,{
+      new: true, //this will added the updated element
+      runValidators: true, // this will check the schema rules
+    })
+    res.status(200).json({
     status: 'success',
     data: {
-      tour: 'Updated properties',
+      tour
     },
   });
+
+  }catch(err){
+    
+    res.status(404).json({
+        status: 'fail',
+        message: 'Invalid Request!'
+      })
+  }
+  
 };
 
 // delete a tour
