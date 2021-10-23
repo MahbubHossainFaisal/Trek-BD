@@ -9,6 +9,7 @@ exports.getAllTours = async (req, res) => {
   
  try{
    //build query
+   //filtering
    //new copy of query object
    const queryObj = {...req.query}
   //fields to exclude before query
@@ -16,7 +17,14 @@ exports.getAllTours = async (req, res) => {
 
   excluededFields.forEach(el => delete queryObj[el])
 
-   const query = Tour.find(queryObj)
+  //advance filtering
+  let queryStr = JSON.stringify(queryObj)
+  //regular expression to match exact word like gt,gte,lt,lte
+  queryStr = queryStr.replace(/\b(gt|gte|lt|lte)\b/g, match => `$${match}`)
+  console.log(JSON.parse(queryStr))
+
+
+   const query = Tour.find(JSON.parse(queryStr))
 
    //execute query
    const tours = await query
