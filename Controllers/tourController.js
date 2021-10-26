@@ -3,6 +3,14 @@
 const Tour = require('../models/tourModel')
 
 
+
+exports.aliasTopTour = (req,res,next) =>{
+  //predefining limit,sorting according to properties for tours/top-5-cheap-tour route
+  req.query.limit = '5'
+  req.query.sort = '-ratingsAverage,price'
+  req.query.fields = 'name,difficulty,summary,ratingsAverage,price'
+  next();
+}
 //Route Handlers
 //get request to get all the tours
 exports.getAllTours = async (req, res) => {
