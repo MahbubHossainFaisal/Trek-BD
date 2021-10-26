@@ -46,6 +46,20 @@ exports.getAllTours = async (req, res) => {
      query = query.select('-__v')
    }
 
+   //Pagination
+   //page 1 , 0-1 documents, page 2 , 2-3 documents.....per page we will show 2 documents let's say
+   const page = req.query.page * 1 || 1
+   const limitValue = req.query.limit * 1 || 100
+   const skipValue = (page-1) * limitValue
+
+   query = query.skip(skipValue).limit(limitValue)
+
+   if(req.query.page){
+     //counting the number of documents in Tour collection
+     const numOfTours = await Tour.countDocuments()
+
+     if(skipValue >= numOfTours) throw new Error('The page does not exist')
+   }
    //execute query
    const tours = await query
 
@@ -59,7 +73,7 @@ exports.getAllTours = async (req, res) => {
  }catch(err){
    res.status(404).json({
      status: 'fail',
-     message: 'Invalid Request!'
+     message: err
    })
  }
 };
