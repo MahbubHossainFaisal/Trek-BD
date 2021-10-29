@@ -185,7 +185,7 @@ exports.deleteTour = async (req, res) => {
 exports.getTourStats = async (req,res) =>{
   try{
     const stats = await Tour.aggregate([
-      { $match : { ratingsAverage: { $gte : 4.7 }}},
+      { $match : { ratingsAverage: { $gte : 4.5 }}},
       {
         $group : {
           _id: '$difficulty',
@@ -214,3 +214,59 @@ exports.getTourStats = async (req,res) =>{
       })
   }
 }
+
+
+exports.getMonthlyPlan = async (req,res) =>{
+ try{
+    const year = req.params.year * 1
+
+  const plan = await Tour.aggregate([
+    { //bring out array elements one by one of startDates and create new documents with each element
+      $unwind: '$startDates'
+    },
+    {
+      //query tours
+      $match: {
+        
+        startDates:{
+          //query condition
+          $gte : new Date(`${year}-01-01`),
+          $lte : new Date(`${year}-12-31`)
+        }
+      }
+    },
+    {
+      $group: {
+        _id: {$month: '$startDates'}, // group by month
+        numTourStarts: {$sum: 1}, //total num of tours in same month
+        tours: {$push: '$name'} // array of the name of the tours start in the same month
+      }
+    },
+    {
+      $addFields: {month: '$_id'} // make month field which will store _id value
+    },
+    {
+      $project: {
+        _id: 0 // means id won't show in document it will be hidden
+      }
+    },
+    {
+      $sort: { numTourStarts: -1} // tour documents will be sorted in decreasing order according to tour number in a month
+    },
+    {
+      $limit: 12 // means we can limit the number of documents that we want to show
+    }
+  ])
+
+  res.status(201).json({
+    status: 'success',
+    data: plan
+  })
+
+ }catch(err){
+  res.status(404).json({
+        status: 'fail',
+        message: 'Invalid Request!'
+      })
+  }
+ }
