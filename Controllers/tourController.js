@@ -18,58 +18,7 @@ exports.aliasTopTour = (req,res,next) =>{
 exports.getAllTours = async (req, res) => {
   
  try{
-   //build query
-   //filtering
-   //new copy of query object
-  //  const queryObj = {...req.query}
-  // //fields to exclude before query
-  // const excluededFields = ['page','limit','sort','fields']
-
-  // excluededFields.forEach(el => delete queryObj[el])
-
-  // //advance filtering
-  // let queryStr = JSON.stringify(queryObj)
-  // //regular expression to match exact word like gt,gte,lt,lte
-  // queryStr = queryStr.replace(/\b(gt|gte|lt|lte)\b/g, match => `$${match}`)
-  // console.log(JSON.parse(queryStr))
-
-
-  //  let query = Tour.find(JSON.parse(queryStr))
-
-
-   //sorting
-  //  if(req.query.sort){
-  //    const sortBy = req.query.sort.split(',').join(' ');
-
-  //   query = query.sort(sortBy);
-  //  }else{
-  //    //by default sorting will be held using createdAt property
-  //    query = query.sort('-createdAt');
-  //  }
-
-   //field limiting
-  //  if(req.query.fields){
-  //    const fields = req.query.fields.split(',').join(' ')
-  //    query = query.select(fields)
-  //  }else{
-  //    //just removing the __v property that mongoose uses.Because we have no use of it.
-  //    query = query.select('-__v')
-  //  }
-
-   //Pagination
-   //page 1 , 0-1 documents, page 2 , 2-3 documents.....per page we will show 2 documents let's say
-  //  const page = req.query.page * 1 || 1
-  //  const limitValue = req.query.limit * 1 || 100
-  //  const skipValue = (page-1) * limitValue
-
-  //  query = query.skip(skipValue).limit(limitValue)
-
-  //  if(req.query.page){
-  //    //counting the number of documents in Tour collection
-  //    const numOfTours = await Tour.countDocuments()
-
-  //    if(skipValue >= numOfTours) throw new Error('The page does not exist')
-  //  }
+   
    //execute query
    const features = new APIFeatures(Tour.find(),req.query)
    features
@@ -130,6 +79,7 @@ exports.createTour = async (req, res) => {
         },
       });
   } catch(err){
+    console.log(err)
     res.status(400).json({
       status: 'fail',
       message: 'Invalid data sent!'
