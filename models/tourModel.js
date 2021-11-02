@@ -9,6 +9,10 @@ const tourSchema = new mongoose.Schema({
         trim: true
     },
     slug: String,
+    secretTour:{
+        type: Boolean,
+        default: false
+    },
     duration:{
         type: Number,
         required: [true, 'A tour must have a duration']
@@ -63,15 +67,30 @@ tourSchema.pre('save',function(next){
     this.slug = slugify(this.name, { lower: true }) //just convert the name property values to lower case
     next();
 })
-tourSchema.pre('save',function(next){
-    console.log('This document will be saved!');
+// tourSchema.pre('save',function(next){
+//     console.log('This document will be saved!');
+//     next();
+// })
+
+// tourSchema.post('save', function(doc,next){
+//     console.log(doc)
+//     next();
+// })
+
+//Query Middleware
+//we used a regular expression find so this middleware will work for every find related query like find,findone,findanddelete,findandupdate etc.
+tourSchema.pre(/^find/, function(next){
+    this.find({ secretTour: {$ne : true}})
+    this.start = Date.now()
     next();
 })
 
-tourSchema.post('save', function(doc,next){
-    console.log(doc)
-    next();
+tourSchema.post(/^find/, function(docs,next){
+    console.log(`Query took ${Date.now() - this.start} milliseconds to run`)
+   // console.log(docs)
+    next()
 })
+
 //model of tourSchema
 const Tour = mongoose.model('Tour', tourSchema)
 
