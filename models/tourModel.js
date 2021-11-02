@@ -91,6 +91,13 @@ tourSchema.post(/^find/, function(docs,next){
     next()
 })
 
+//aggregate query
+tourSchema.pre('aggregate', function(next){
+    //console.log(this.pipeline)
+    this.pipeline().unshift({ $match: { secretTour: { $ne: true}}})
+    next();
+})
+
 //model of tourSchema
 const Tour = mongoose.model('Tour', tourSchema)
 
